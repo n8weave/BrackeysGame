@@ -11,6 +11,7 @@ class BRACKEYGAME_API UFLowController : public UObject
 {
 	GENERATED_UCLASS_BODY()
 public:
+	static UWorld* GetWorld();
 	UFUNCTION(BlueprintCallable, Category = "FlowController")
 	static void LoadLevel(ELevelNames LevelName);
 };
