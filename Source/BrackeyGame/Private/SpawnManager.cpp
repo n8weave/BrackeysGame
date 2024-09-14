@@ -33,45 +33,50 @@ void ASpawnManager::InitManager(const FUWavesConfig& InWavesConfig, const int32 
 		UE_LOG(LogTemp, Error, TEXT("Invalid stage index: %d"), CurrentStageIndex);
 		return;
 	}
-
-	WavesConfig = InWavesConfig;
 }
 
 
 void ASpawnManager::GetNextBatch(USpawnBatch* & Batch)
 {
-	bool bIsLastWave = CurrentWaveIndex >= WavesConfig.Waves.Num();
+	UE_LOG(LogTemp, Warning, TEXT("Entering Wave/Stage: %d/%d"), CurrentWaveIndex, CurrentStageIndex);
+	if (!Batch)
+	{
+		Batch = NewObject<USpawnBatch>();
+	}
 
-	UE_LOG(LogTemp, Error, TEXT("!! Wave/Stage: %d/%d"), CurrentWaveIndex, CurrentStageIndex);
-	
+
 	if (CurrentWaveIndex < WavesConfig.Waves.Num())
 	{
-		bool bIsLastStage = CurrentStageIndex >= WavesConfig.Waves[CurrentWaveIndex].Stages.Num();
-
-		// if Batch is null, create a new instance
-		if (!Batch)
+		bool bIsLastWave = CurrentWaveIndex >= WavesConfig.Waves.Num() - 1;
+		if (CurrentStageIndex < WavesConfig.Waves[CurrentWaveIndex].Stages.Num())
 		{
-			Batch = NewObject<USpawnBatch>();
+			bool bIsLastStage = CurrentStageIndex >= WavesConfig.Waves[CurrentWaveIndex].Stages.Num() - 1;
+
+			Batch->StageConfig = WavesConfig.Waves[CurrentWaveIndex].Stages[CurrentStageIndex];
+			Batch->NextStageDelay = WavesConfig.Waves[CurrentWaveIndex].NextStageDelay;
+			Batch->DamageMultiplier = WavesConfig.Waves[CurrentWaveIndex].DamageMultiplier;
+			Batch->HealthMultiplier = WavesConfig.Waves[CurrentWaveIndex].HealthMultiplier;
+			Batch->SpeedMultiplier = WavesConfig.Waves[CurrentWaveIndex].SpeedMultiplier;
+			Batch->bIsLastWave = bIsLastWave;
+			Batch->bIsLastStage = bIsLastStage;
+
+			if (bIsLastStage)
+			{
+				CurrentWaveIndex++;
+				CurrentStageIndex = 0;
+			}
+			else
+			{
+				CurrentStageIndex++;
+			}
 		}
-
-		Batch->StageConfig = WavesConfig.Waves[CurrentWaveIndex].Stages[CurrentStageIndex];
-		Batch->NextStageDelay = WavesConfig.Waves[CurrentWaveIndex].NextStageDelay;
-		Batch->DamageMultiplier = WavesConfig.Waves[CurrentWaveIndex].DamageMultiplier;
-		Batch->HealthMultiplier = WavesConfig.Waves[CurrentWaveIndex].HealthMultiplier;
-		Batch->SpeedMultiplier = WavesConfig.Waves[CurrentWaveIndex].SpeedMultiplier;
-		Batch->bIsLastStage = bIsLastStage;
-		Batch->bIsLastWave = bIsLastWave;
-
-		CurrentStageIndex++;
-
-		if (bIsLastStage)
+		else
 		{
-			CurrentWaveIndex++;
-			CurrentStageIndex = 0;
+			UE_LOG(LogTemp, Error, TEXT("Invalid stage index: %d"), CurrentStageIndex);
 		}
 	}
 	else
 	{
-		UE_LOG(LogTemp, Error, TEXT("### Invalid wave index: %d"), CurrentWaveIndex);
+		UE_LOG(LogTemp, Error, TEXT("Invalid wave index: %d"), CurrentWaveIndex);
 	}
 }
