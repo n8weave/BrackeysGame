@@ -33,35 +33,42 @@ void ASpawnManager::InitManager(const FUWavesConfig& InWavesConfig, const int32 
 		UE_LOG(LogTemp, Error, TEXT("Invalid stage index: %d"), CurrentStageIndex);
 		return;
 	}
-	
+
 	WavesConfig = InWavesConfig;
 }
 
 
-void ASpawnManager::GetNextBatch(USpawnBatch* &Batch)
+void ASpawnManager::GetNextBatch(USpawnBatch* & Batch)
 {
-	bool bIsLastWave = CurrentWaveIndex >= WavesConfig.Waves.Num();
-	bool bIsLastStage = CurrentStageIndex >= WavesConfig.Waves[CurrentWaveIndex].Stages.Num();
-
-	// if Batch is null, create a new instance
-	if (!Batch)
+	bool bIsLastWave = CurrentWaveIndex >= WavesConfig.Waves.Num() - 1;
+	if (CurrentWaveIndex < WavesConfig.Waves.Num())
 	{
-		Batch = NewObject<USpawnBatch>();
+		bool bIsLastStage = CurrentStageIndex >= WavesConfig.Waves[CurrentWaveIndex].Stages.Num() - 1;
+
+		// if Batch is null, create a new instance
+		if (!Batch)
+		{
+			Batch = NewObject<USpawnBatch>();
+		}
+
+		Batch->StageConfig = WavesConfig.Waves[CurrentWaveIndex].Stages[CurrentStageIndex];
+		Batch->NextStageDelay = WavesConfig.Waves[CurrentWaveIndex].NextStageDelay;
+		Batch->DamageMultiplier = WavesConfig.Waves[CurrentWaveIndex].DamageMultiplier;
+		Batch->HealthMultiplier = WavesConfig.Waves[CurrentWaveIndex].HealthMultiplier;
+		Batch->SpeedMultiplier = WavesConfig.Waves[CurrentWaveIndex].SpeedMultiplier;
+		Batch->bIsLastStage = bIsLastStage;
+		Batch->bIsLastWave = bIsLastWave;
+
+		CurrentStageIndex++;
+
+		if (bIsLastStage)
+		{
+			CurrentWaveIndex++;
+			CurrentStageIndex = 0;
+		}
 	}
-	
-	Batch->StageConfig = WavesConfig.Waves[CurrentWaveIndex].Stages[CurrentStageIndex];
-	Batch->NextStageDelay = WavesConfig.Waves[CurrentWaveIndex].NextStageDelay;
-	Batch->DamageMultiplier = WavesConfig.Waves[CurrentWaveIndex].DamageMultiplier;
-	Batch->HealthMultiplier = WavesConfig.Waves[CurrentWaveIndex].HealthMultiplier;
-	Batch->SpeedMultiplier = WavesConfig.Waves[CurrentWaveIndex].SpeedMultiplier;
-	Batch->bIsLastStage = bIsLastStage;
-	Batch->bIsLastWave = bIsLastWave;
-
-	CurrentStageIndex++;
-
-	if (bIsLastStage)
+	else
 	{
-		CurrentWaveIndex++;
-		CurrentStageIndex = 0;
+		UE_LOG(LogTemp, Error, TEXT("Invalid wave index: %d"), CurrentWaveIndex);
 	}
 }
