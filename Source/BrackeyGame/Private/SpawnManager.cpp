@@ -40,10 +40,13 @@ void ASpawnManager::InitManager(const FUWavesConfig& InWavesConfig, const int32 
 
 void ASpawnManager::GetNextBatch(USpawnBatch* & Batch)
 {
-	bool bIsLastWave = CurrentWaveIndex >= WavesConfig.Waves.Num() - 1;
+	bool bIsLastWave = CurrentWaveIndex >= WavesConfig.Waves.Num();
+
+	UE_LOG(LogTemp, Error, TEXT("!! Wave/Stage: %d/%d"), CurrentWaveIndex, CurrentStageIndex);
+	
 	if (CurrentWaveIndex < WavesConfig.Waves.Num())
 	{
-		bool bIsLastStage = CurrentStageIndex >= WavesConfig.Waves[CurrentWaveIndex].Stages.Num() - 1;
+		bool bIsLastStage = CurrentStageIndex >= WavesConfig.Waves[CurrentWaveIndex].Stages.Num();
 
 		// if Batch is null, create a new instance
 		if (!Batch)
@@ -69,6 +72,6 @@ void ASpawnManager::GetNextBatch(USpawnBatch* & Batch)
 	}
 	else
 	{
-		UE_LOG(LogTemp, Error, TEXT("Invalid wave index: %d"), CurrentWaveIndex);
+		UE_LOG(LogTemp, Error, TEXT("### Invalid wave index: %d"), CurrentWaveIndex);
 	}
 }
