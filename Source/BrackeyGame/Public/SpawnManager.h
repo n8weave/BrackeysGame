@@ -10,10 +10,10 @@
 USTRUCT()
 struct FUEnemyConfig : public FTableRowBase
 {
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Spawn Manager")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Spawn Manager")
 	TSubclassOf<AActor> EnemyClass;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Spawn Manager")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Spawn Manager")
 	int32 Count;
 
 	GENERATED_BODY()
@@ -32,7 +32,7 @@ struct FUEnemyConfig : public FTableRowBase
 USTRUCT()
 struct FUSpawnStageConfig : public FTableRowBase
 {
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Spawn Manager")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Spawn Manager")
 	TArray<FUEnemyConfig> Enemies;
 
 	GENERATED_BODY()
@@ -49,19 +49,19 @@ struct FUSpawnStageConfig : public FTableRowBase
 USTRUCT()
 struct FUSpawnWaveConfig : public FTableRowBase
 {
-	UPROPERTY(EditAnywhere, Category="Spawn Manager")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Spawn Manager")
 	TArray<FUSpawnStageConfig> Stages;
 
-	UPROPERTY(EditAnywhere, Category = "Spawn manager")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Spawn Manager")
 	float NextStageDelay;
 
-	UPROPERTY(EditAnywhere, Category = "Spawn manager")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Spawn Manager")
 	float DamageMultiplier;
 
-	UPROPERTY(EditAnywhere, Category = "Spawn manager")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Spawn Manager")
 	float HealthMultiplier;
 
-	UPROPERTY(EditAnywhere, Category = "Spawn manager")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Spawn Manager")
 	float SpeedMultiplier;
 
 	GENERATED_BODY()
@@ -85,7 +85,7 @@ struct FUWavesConfig : public FTableRowBase
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, Category="Spawn Manager")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Spawn Manager")
 	TArray<FUSpawnWaveConfig> Waves;
 
 	FUWavesConfig()
@@ -105,25 +105,25 @@ public:
 	USpawnBatch();
 
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Spawn Manager")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Spawn Manager")
 	FUSpawnStageConfig StageConfig;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawn manager")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawn manager")
 	float NextStageDelay;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawn manager")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawn manager")
 	float DamageMultiplier;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawn manager")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawn manager")
 	float HealthMultiplier;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawn manager")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawn manager")
 	float SpeedMultiplier;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawn manager")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawn manager")
 	bool bIsLastStage;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawn manager")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawn manager")
 	bool bIsLastWave;
 };
 

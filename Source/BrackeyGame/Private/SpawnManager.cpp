@@ -16,6 +16,7 @@ ASpawnManager::ASpawnManager()
 void ASpawnManager::InitManager(const FUWavesConfig& InWavesConfig, const int32 StartWaveIndex,
                                 const int32 StartStageIndex)
 {
+	WavesConfig = InWavesConfig;
 	CurrentWaveIndex = StartWaveIndex;
 	CurrentStageIndex = StartStageIndex;
 
@@ -32,19 +33,22 @@ void ASpawnManager::InitManager(const FUWavesConfig& InWavesConfig, const int32 
 		UE_LOG(LogTemp, Error, TEXT("Invalid stage index: %d"), CurrentStageIndex);
 		return;
 	}
-
-
+	
 	WavesConfig = InWavesConfig;
 }
 
 
 void ASpawnManager::GetNextBatch(USpawnBatch* &Batch)
 {
-	// USpawnBatch* Batch = NewObject<USpawnBatch>();
-
 	bool bIsLastWave = CurrentWaveIndex >= WavesConfig.Waves.Num();
 	bool bIsLastStage = CurrentStageIndex >= WavesConfig.Waves[CurrentWaveIndex].Stages.Num();
 
+	// if Batch is null, create a new instance
+	if (!Batch)
+	{
+		Batch = NewObject<USpawnBatch>();
+	}
+	
 	Batch->StageConfig = WavesConfig.Waves[CurrentWaveIndex].Stages[CurrentStageIndex];
 	Batch->NextStageDelay = WavesConfig.Waves[CurrentWaveIndex].NextStageDelay;
 	Batch->DamageMultiplier = WavesConfig.Waves[CurrentWaveIndex].DamageMultiplier;
